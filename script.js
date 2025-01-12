@@ -4,10 +4,29 @@ const navItems = document.querySelectorAll(".nav-item");
 // Elemen untuk memuat konten
 const contentDiv = document.getElementById("content");
 
-// Cek jika elemen #content ada
-if (!contentDiv) {
-  console.error("Elemen dengan ID 'content' tidak ditemukan!");
-}
+// Muat konten beranda secara default saat halaman dimuat
+document.addEventListener("DOMContentLoaded", () => {
+  const defaultFile = "public/beranda.html";
+  fetch(defaultFile)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Gagal memuat konten: " + response.statusText);
+      }
+      return response.text();
+    })
+    .then((data) => {
+      contentDiv.innerHTML = data;
+
+      // Tambahkan class "active" ke nav-item beranda
+      const homeNavItem = document.querySelector('.nav-item[data-file="public/beranda.html"]');
+      if (homeNavItem) {
+        homeNavItem.classList.add("text-[#0359A3]");
+      }
+    })
+    .catch((error) => {
+      contentDiv.innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
+    });
+});
 
 // Tambahkan event listener untuk setiap nav-item
 navItems.forEach((item) => {
